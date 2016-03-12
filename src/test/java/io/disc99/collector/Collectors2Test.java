@@ -6,9 +6,7 @@ import org.junit.Test;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static io.disc99.collector.Collectors2.toListAndThen;
-import static io.disc99.collector.Collectors2.toListAndThenAfterOptional;
-import static io.disc99.collector.Collectors2.toUnmodifiableList;
+import static io.disc99.collector.Collectors2.*;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
@@ -39,15 +37,22 @@ public class Collectors2Test {
 
         // Collectorを組み合わせる
         List<String> c13 = stream().collect(collectingAndThen(toList(), Collections::unmodifiableList));
-        List<String> c14 = stream().collect(toUnmodifiableList());
+        List<String> c14 = stream().collect(toUnmodifiableList());  // toImmutableList(), il()
 
         History c15 = stream().collect(collectingAndThen(toList(), History::new));
         History c16 = stream().collect(toListAndThen(History::new));
+
+        // Stream
+        Stream<Map.Entry<Integer, List<String>>> c19 = stream().collect(groupingBy(String::length)).entrySet().stream();
+        Stream<Map.Entry<Integer, List<String>>> c20 = stream().collect(groupingEntity(String::length));
+
+
 
         // Optional
         Optional<History> c17 = stream().collect(collectingAndThen(toList(),
                 events -> events.isEmpty() ? Optional.empty() : Optional.of(new History(events))));
         Optional<History> c18 = stream().collect(toListAndThenAfterOptional(History::new));
+
 
         // Future
         // Tuple

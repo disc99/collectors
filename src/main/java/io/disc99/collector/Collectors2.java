@@ -2,11 +2,14 @@ package io.disc99.collector;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 public class Collectors2 {
@@ -27,4 +30,7 @@ public class Collectors2 {
         return collectingAndThen(toOptionalList(), op -> op.map(finisher));
     }
 
+    public static <T, K> Collector<T, ?, Stream<Map.Entry<K, List<T>>>> groupingEntity(Function<T, K> classifier) {
+        return collectingAndThen(groupingBy(classifier), m -> m.entrySet().stream());
+    }
 }
